@@ -1,0 +1,26 @@
+{
+  "productName": "LLM Terminal",
+  "version": "1.0.0",
+  "identifier": "com.llmterminal.app",
+  "build": {
+    "frontendDist": "../renderer"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "LLM Terminal",
+        "width": 1100,
+        "height": 750,
+        "minWidth": 700,
+        "minHeight": 500,
+        "resizable": true,
+        "fullscreen": false,
+        "decorations": true
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src https: ipc: http://ipc.localhost"
+    }
+  }
+}

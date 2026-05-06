@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src https: ipc: http://ipc.localhost">
+  <title>LLM Terminal</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Toast -->
+  <div id="toast" class="toast hidden"></div>
+
+  <div class="app">
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-title">CHATS</span>
+        <button class="icon-btn" id="new-chat-btn" title="New Chat">+</button>
+      </div>
+      <div class="chat-list" id="chat-list"></div>
+      <div class="sidebar-footer">
+        <div class="selection-actions" id="selection-actions">
+          <div class="selection-label">SELECTION</div>
+          <button class="action-btn" id="ctx-copy">Copy</button>
+          <div class="action-row">
+            <button class="action-btn flex1" id="ctx-rag">→ RAG</button>
+            <button class="action-btn view-btn" id="view-rag-btn">View</button>
+          </div>
+          <div class="action-row">
+            <button class="action-btn flex1" id="ctx-hash">→ Hash</button>
+            <button class="action-btn view-btn" id="view-hash-btn">View</button>
+          </div>
+          <div class="action-row">
+            <button class="action-btn flex1" id="ctx-pin">📌 Pin</button>
+            <button class="action-btn view-btn" id="view-pinned-btn">View</button>
+          </div>
+        </div>
+        <button class="icon-btn wide" id="settings-btn">⚙ Settings</button>
+      </div>
+    </aside>
+
+    <!-- Toggle tab -->
+    <div class="sidebar-toggle" id="sidebar-toggle">&#x276E;</div>
+
+    <!-- Main -->
+    <main class="main">
+
+      <!-- Top bar -->
+      <div class="topbar">
+        <span class="chat-title" id="chat-title">No chat selected</span>
+        <div class="topbar-right">
+          <span id="token-counter" class="token-counter"></span>
+          <select id="provider-select" class="select-sm">
+            <option value="anthropic">Anthropic</option>
+            <option value="openai">OpenAI</option>
+            <option value="groq">Groq</option>
+            <option value="custom">Custom</option>
+          </select>
+          <input id="model-input" class="input-sm" placeholder="model name" />
+          <select id="window-select" class="select-sm" title="Sliding message window">
+            <option value="0">No history</option>
+            <option value="3" selected>Last 3</option>
+            <option value="5">Last 5</option>
+            <option value="10">Last 10</option>
+            <option value="all">All</option>
+          </select>
+          <button class="btn-sm" id="hash-flush-btn" title="Write hash to disk">⬇ Hash</button>
+        </div>
+      </div>
+
+      <!-- Response area -->
+      <div class="response-area" id="response-area">
+        <div class="empty-state">Select or create a chat to begin.</div>
+      </div>
+
+      <!-- Input area -->
+      <div class="input-area">
+        <textarea id="msg-input" placeholder="Send a message..." rows="3"></textarea>
+        <button id="send-btn" class="send-btn">Send</button>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- RAG Viewer -->
+  <div class="modal-overlay hidden" id="rag-modal">
+    <div class="modal modal-wide">
+      <div class="modal-title">RAG CHUNKS</div>
+      <div id="rag-body" class="viewer-body"></div>
+      <div class="modal-actions">
+        <button id="rag-close-btn" class="btn-ghost">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hash Viewer -->
+  <div class="modal-overlay hidden" id="hash-modal">
+    <div class="modal modal-wide">
+      <div class="modal-title">HASH TABLE</div>
+      <div id="hash-body" class="viewer-body"></div>
+      <div class="modal-actions">
+        <button id="hash-close-btn" class="btn-ghost">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pinned Viewer -->
+  <div class="modal-overlay hidden" id="pinned-modal">
+    <div class="modal modal-wide">
+      <div class="modal-title">PINNED MESSAGES</div>
+      <div id="pinned-body" class="viewer-body"></div>
+      <div class="modal-actions">
+        <button id="pinned-close-btn" class="btn-ghost">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inspector Modal -->
+  <div class="modal-overlay hidden" id="inspector-modal">
+    <div class="modal modal-wide">
+      <div class="modal-title">REQUEST INSPECTOR</div>
+      <div id="inspector-body" class="inspector-body"></div>
+      <div class="modal-actions">
+        <button id="inspector-close-btn" class="btn-ghost">Close</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-overlay hidden" id="settings-modal">
+    <div class="modal">
+      <div class="modal-title">Settings</div>
+      <label>API Key</label>
+      <input type="password" id="api-key-input" placeholder="sk-..." />
+      <label>Custom Base URL <span class="dim">(optional)</span></label>
+      <input id="base-url-input" placeholder="https://api.openai.com/v1" />
+      <div class="modal-actions">
+        <button id="settings-save-btn" class="btn-primary">Save</button>
+        <button id="settings-cancel-btn" class="btn-ghost">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
